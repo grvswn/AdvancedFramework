@@ -8,11 +8,11 @@ const Product = bookshelf.model('Product',{
 });
 
 const Category = bookshelf.model('Category',{
-    tablename:'categories',
+    tableName:'categories',
     products() {
-        return this.hasMany('Product');
+        return this.hasMany('product');
     }
-})
+});
 
 module.exports = {
     Product, Category
