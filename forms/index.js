@@ -4,13 +4,7 @@ const fields = forms.fields;
 const validators = forms.validators;
 const widgets = forms.widgets;
 
-/**
- * 
- * @param {*} choices Choice must be an array of nested array, each nested array's index 0 is the ID, and 1 is the name
- * @returns 
- */
-
-const createProductForm = (choices=[]) => {
+const createProductForm = (categories, tags) => {
     return forms.create({   
         name: fields.string({
             required: true,
@@ -30,8 +24,18 @@ const createProductForm = (choices=[]) => {
             required: true,
             errorAfterField: true,
             widget: widgets.select(), 
-            choices: choices
+            choices: categories
+        }),
+        'tags': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.multipleSelect(),
+            choices: tags
         })
+
     })
 }
 
