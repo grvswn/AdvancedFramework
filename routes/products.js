@@ -39,7 +39,8 @@ router.post('/create', async function(req,res){
             let tags = form.data.tags;
             if (tags) {
                 await product.tags().attach(tags.split(','));
-            }
+            };
+            req.flash("success_messages", "New product has been added");
             res.redirect('/products');
 
         },
@@ -146,6 +147,7 @@ router.post('/:product_id/delete', async function(req,res){
         require: true 
     }); 
     await product.destroy();
+    req.flash("success_messages", "Product has been deleted");
     res.redirect('/products');
 });
 
