@@ -22,8 +22,12 @@ const Tag = bookshelf.model("Tag",{
     products:function() {
         return this.belongsToMany('Product')
     }
-})
+});
+
+const User = bookshelf.model('User',{
+    tableName: 'users'
+});
 
 module.exports = {
-    Product, Category, Tag
+    Product, Category, Tag, User
 };

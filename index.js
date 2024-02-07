@@ -22,7 +22,7 @@ app.use(
 
 app.use(session({
   store: new FileStore(),
-  secret: 'keyboard cat',
+  secret: process.env.SESSIONS_SECRET,
   resave: false,
   saveUninitialized: true
 }));
@@ -37,10 +37,12 @@ app.use(function (req, res, next) {
 
 const landingRoutes = require('./routes/landing.js');
 const productRoutes = require('./routes/products');
+const userRoutes = require('./routes/users');
 
 async function main() {
     app.use('/', landingRoutes);
     app.use('/products', productRoutes);
+    app.use('/users', userRoutes);
 }
 
 main();
@@ -48,4 +50,3 @@ main();
 app.listen(3000, () => {
   console.log("Server has started");
 });
-

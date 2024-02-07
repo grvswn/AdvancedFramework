@@ -1,6 +1,7 @@
 const express = require('express');
 const { Product, Category, Tag } = require('../models');
 const { createProductForm, bootstrapField } = require('../forms');
+const { userAuthenticationCheck } = require('../middlewares');
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/', async function(req,res){
     });
 });
 
-router.get('/create', async function(req,res){
+router.get('/create', userAuthenticationCheck, async function(req,res){
     const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
     const tags = await Tag.fetchAll().map( tag =>  [tag.get('id'), tag.get('name')]);
 
@@ -23,7 +24,7 @@ router.get('/create', async function(req,res){
     })
 });
 
-router.post('/create', async function(req,res){
+router.post('/create', userAuthenticationCheck, async function(req,res){
     const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
     const tags = await Tag.fetchAll().map( tag =>  [tag.get('id'), tag.get('name')]);
 
