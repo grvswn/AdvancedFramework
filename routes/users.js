@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
 router.get('/profile', (req, res) => {
     const user = req.session.user;
     if (!user) {
-        req.flash('error_messages', 'You do not have permission to view this page');
+        req.flash('error_messages', 'Log in to view this page');
         res.redirect('/users/login');
     } else {
         res.render('users/profile',{

@@ -2,6 +2,7 @@ const express = require("express");
 const hbs = require("hbs");
 const wax = require("wax-on");
 require("dotenv").config();
+const csrf = require('csurf');
 
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -28,11 +29,24 @@ app.use(session({
 }));
 
 app.use(flash());
-
 app.use(function (req, res, next) {
   res.locals.success_messages = req.flash("success_messages");
   res.locals.error_messages = req.flash("error_messages");
   next();
+});
+
+app.use(csrf());
+app.use(function(req,res,next){
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+app.use(function (err, req, res, next) {
+  if (err && err.code == "EBADCSRFTOKEN") {
+      req.flash('error_messages', 'The form has expired. Please try again');
+      res.redirect('back');
+  } else {
+      next();
+  }
 });
 
 const landingRoutes = require('./routes/landing.js');
