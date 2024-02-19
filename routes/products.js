@@ -19,9 +19,12 @@ router.get('/create', userAuthenticationCheck, async function(req,res){
     const tags = await Tag.fetchAll().map( tag =>  [tag.get('id'), tag.get('name')]);
 
     const productForm = createProductForm(allCategories, tags);
-    res.render('products/create',{
-        form: productForm.toHTML(bootstrapField)
-    })
+    res.render('products/create', {
+        'form': productForm.toHTML(bootstrapField),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
+    });
 });
 
 router.post('/create', userAuthenticationCheck, async function(req,res){
@@ -75,13 +78,18 @@ router.get('/:product_id/update', async function(req,res){
    productForm.fields.description.value = product.get('description');
    productForm.fields.cost.value = product.get('cost');
    productForm.fields.category_id.value = product.get('category_id');
+   productForm.fields.image_url.value = product.get('image_url');
+
 
    let selectedTags = await product.related('tags').pluck('id');
     productForm.fields.tags.value= selectedTags;
 
 
    res.render('products/update',{
-    form: productForm.toHTML(bootstrapField)
+    form: productForm.toHTML(bootstrapField),
+    cloudinaryName: process.env.CLOUDINARY_NAME,
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+    cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
    });
 });
 
