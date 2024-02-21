@@ -41,6 +41,53 @@ const createProductForm = (categories, tags) => {
     });
 };
 
+const createSearchForm = (categories, tags) => {
+    return forms.create({
+        'name': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'min_cost': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            'validators': [validators.integer()]
+        }),
+          'max_cost': fields.string({
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            'validators': [validators.integer()]
+        }),
+        'category_id': fields.string({
+            label: 'Category',
+            required: false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.select(),
+            choices: categories
+        }),
+        'tags': fields.string({
+            required:false,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            widget: widgets.multipleSelect(),
+            choices: tags
+        }),
+    })
+};
+
 const createRegistrationForm = () => {
     return forms.create({
         'username': fields.string({
@@ -114,4 +161,9 @@ const bootstrapField = function (name, object) {
     return '<div class="form-group">' + label + widget + error + '</div>';
 };
 
-module.exports = {createProductForm, createRegistrationForm, createLoginForm, bootstrapField}
+module.exports = {
+    createProductForm, 
+    createSearchForm, 
+    createRegistrationForm, 
+    createLoginForm, 
+    bootstrapField}

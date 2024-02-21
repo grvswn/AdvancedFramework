@@ -5,12 +5,8 @@
 <form method="POST">
     {{{form}}}
     <div>
-      <a href="#" class="btn btn-primary" id="upload_widget">Upload</a>
-        {{#if product.image_url}}
-            <img src="{{product.image_url}}" id="uploaded_image" />
-        {{else}}
-            <img src="" style="display:none" id="uploaded_image" />
-        {{/if}}
+        <button id="upload_widget" class="btn btn-primary">Upload</button>
+        <img src="#" style="display:none" id="uploaded_image"/>
     </div>
     <input type="submit" class="btn btn-primary mt-3" />
     <input type="hidden" name="_csrf" value="{{csrfToken}}"/>

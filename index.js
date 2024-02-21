@@ -23,7 +23,7 @@ app.use(
 
 app.use(session({
   store: new FileStore(),
-  secret: process.env.SESSIONS_SECRET,
+  secret: process.env.SESSIONS_SECRET_KEY,
   resave: false,
   saveUninitialized: true
 }));

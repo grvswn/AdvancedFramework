@@ -1,16 +1,71 @@
 const express = require('express');
 const { Product, Category, Tag } = require('../models');
-const { createProductForm, bootstrapField } = require('../forms');
+const { createProductForm, createSearchForm, bootstrapField } = require('../forms');
 const { userAuthenticationCheck } = require('../middlewares');
 
 const router = express.Router();
 
-router.get('/', async function(req,res){
-    let products = await Product.collection().fetch({
-        withRelated:['category', 'tags']
-    });
-    res.render("products/index",{
-        products: products.toJSON()
+router.get('/', async function (req, res) {
+
+    const allCategories = await Category.fetchAll().map(category => [category.get('id'), category.get('name')]);
+    allCategories.unshift([0, '----']);
+    const allTags = await Tag.fetchAll().map(tag => [tag.get('id'), tag.get('name')]);
+
+    const searchForm = createSearchForm(allCategories, allTags);
+    searchForm.handle(req, {
+        "success": async function (form) {
+            const q = Product.collection(); 
+
+            if (form.data.name) {
+                q.where('name', 'like', '%' +form.data.name + '%')
+           };
+
+           if (form.data.category_id && form.data.category_id != "0") {
+                q.where('category_id', '=', form.data.category_id)
+           };
+
+           if (form.data.min_cost) {
+                q.where('cost', '>=', form.data.min_cost)
+           };
+
+           if (form.data.max_cost) {
+               q.where('cost', '<=', form.data.max_cost);
+           };
+
+            if (form.data.tags) {
+               q.query('join', 'products_tags', 'products.id', 'product_id')
+               .where('tag_id', 'in', form.data.tags.split(','))
+           };
+
+            const products = await q.fetch({
+                withRelated:['category', 'tags']
+            });
+
+            res.render("products/index", {
+                products: products.toJSON(),
+                form: searchForm.toHTML(bootstrapField)
+            });
+        },
+        "error": async function (form) {
+
+            let products = await Product.collection().fetch({
+                withRelated: ['category', 'tags']
+            });
+            res.render("products/index", {
+                products: products.toJSON(),
+                form: searchForm.toHTML(bootstrapField)
+            });
+        },
+        "empty": async function (form) {
+
+            let products = await Product.collection().fetch({
+                withRelated: ['category', 'tags']
+            });
+            res.render("products/index", {
+                products: products.toJSON(),
+                form: searchForm.toHTML(bootstrapField)
+            });
+        }
     });
 });
 
