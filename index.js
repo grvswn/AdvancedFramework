@@ -42,11 +42,21 @@ app.use(function(req,res,next){
   next();
 });
 
-app.use(csrf());
+const csurfInstance = csrf();
 app.use(function(req,res,next){
-  res.locals.csrfToken = req.csrfToken();
+  if (req.url === "/checkout/process_payment") {
+    return next();
+  }
+  csurfInstance(req,res,next);
+});
+
+app.use(function(req,res,next){
+  if (req.csrfToken) {
+    res.locals.csrfToken = req.csrfToken();
+  };
   next();
 });
+
 app.use(function (err, req, res, next) {
   if (err && err.code == "EBADCSRFTOKEN") {
       req.flash('error_messages', 'The form has expired. Please try again');
@@ -61,6 +71,7 @@ const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const cloudinaryRoutes = require('./routes/cloudinary');
 const cartRoutes = require('./routes/shoppingCart');
+const checkoutRoutes = require('./routes/checkout');
 
 async function main() {
     app.use('/', landingRoutes);
@@ -68,6 +79,7 @@ async function main() {
     app.use('/users', userRoutes);
     app.use('/cloudinary', cloudinaryRoutes);
     app.use('/cart', cartRoutes);
+    app.use('/checkout', checkoutRoutes);
 };
 
 main();
