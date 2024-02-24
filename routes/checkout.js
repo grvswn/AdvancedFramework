@@ -74,4 +74,8 @@ router.get('/success', function(req,res){
     res.render("checkout/success");
 });
 
+router.get('/error', function(req,res){
+    res.render("checkout/error");
+});
+
 module.exports = router;
