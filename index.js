@@ -35,6 +35,13 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(function(req,res,next){
+  if (req.session.user.username) {
+    res.locals.userName = req.session.user.username;
+  }
+  next();
+});
+
 app.use(csrf());
 app.use(function(req,res,next){
   res.locals.csrfToken = req.csrfToken();
@@ -49,16 +56,18 @@ app.use(function (err, req, res, next) {
   }
 });
 
-const landingRoutes = require('./routes/landing.js');
+const landingRoutes = require('./routes/landing');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
-const cloudinaryRoutes = require('./routes/cloudinary.js');
+const cloudinaryRoutes = require('./routes/cloudinary');
+const cartRoutes = require('./routes/shoppingCart');
 
 async function main() {
     app.use('/', landingRoutes);
     app.use('/products', productRoutes);
     app.use('/users', userRoutes);
     app.use('/cloudinary', cloudinaryRoutes);
+    app.use('/cart', cartRoutes);
 };
 
 main();
