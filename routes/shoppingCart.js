@@ -27,6 +27,4 @@ router.post('/:product_id/quantity/update', async(req,res)=>{
     res.redirect('/cart/');
 });
 
-
-
 module.exports = router;
