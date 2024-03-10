@@ -3,6 +3,7 @@ const hbs = require("hbs");
 const wax = require("wax-on");
 require("dotenv").config();
 const csrf = require('csurf');
+const cors = require('cors');
 
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -20,6 +21,8 @@ app.use(
     extended: false
   })
 );
+
+app.use(cors());
 
 app.use(session({
   store: new FileStore(),
